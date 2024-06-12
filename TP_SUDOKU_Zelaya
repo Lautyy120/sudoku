@@ -1,0 +1,999 @@
+https://github.com/Lucasquinta/LPOO/blob/main/Juego%20Pirata
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main() {
+    int usuario, maquina, i, j, n=5, m=3, yo, el, us, riv=0, jug, emp;//Declara variables
+    srand(time(NULL));  //Funcion de Numero Random
+do{//Inicia el ciclo
+    us=0;//Iguala a "us" a 0
+    riv=0;//Iguala a "riv" a 0
+    for(i=0; i<n; i++){//Inicia un ciclo for
+    	for(j=0; j<m; j++){//inicia otro ciclo for
+
+    printf("Elige tu opci0n:\n");//Elige la opcion
+    printf("1. Piedra\n");
+    printf("2. Papel\n");
+    printf("3. Tijera\n");
+    scanf("%d", &usuario);
+
+
+    maquina = rand() % 3 + 1; //Pone los limites del numero random
+
+    printf("Tu elegiste: %d\n", usuario);//Dice la opcion elegida
+    printf("La maquina eligio: %d\n", maquina);//Dice la opcion por la maquina
+
+    if (usuario == maquina) {//Al elegir la misma opcion entra en el if
+        printf("Empate\n\n");//Imprime que empataron
+    } else if ((usuario == 1 && maquina == 3) || (usuario == 2 && maquina == 1) || (usuario == 3 && maquina == 2)) {//Evalua si gano el usuario y entra en el else if
+        printf("¡Ganaste!\n\n");//Imprime que ganaste
+        yo= yo+1;//Suma un punto a "yo"
+    } else {//Si no entro en ninguno de los anteriores, entra en este else
+        printf("Perdiste\n\n ");//Imprime que perdiste
+        el= el+1;//Suma un punto a "el"
+    }
+    
+		}
+		if(yo>el){//Si "yo" tiene mas que "el" entra en el If
+			us= us+1;//Suma un punto a "us"
+		}else if(el>yo){//Si "el"tiene mas puntos que "yo"entra en el else if
+			riv +=1;//suma un punto a "riv"
+		}else{//Si no entro en ningulo de los anteriores, entra en este else
+			emp= emp+1;//Suma un punto a "emp"
+		}
+		
+		yo=0;//iguala "yo" a 0
+		el=0;//iguala  "el" a 0
+		printf("Termino la ronda N %d \n", i+1);//Imprime que termino la ronda
+			if(us==3){ //Si "us" es igual a 3 entra en el if
+			break;//Termina el ciclo
+		}else if(riv==3){ //Si "riv" es igual a 3 entra en el if
+			break;//termina el ciclo
+		}
+	
+	}
+		if(us>riv){//Si "us" es mayor a "riv" entra en el if
+			printf("¡Ganaste la partida! :P\n\n");//Imprime que ganaste la partida
+		}else if(riv>us){ //Si "riv" es mayor a "us" entra en el if
+			printf("Perdiste la partida ;(\n\n ");//Imprime que perdiste la partida
+		}
+	if(us==riv){//Si "us" es igual a "riv" entra en el if 
+	printf("Empate.");//Imprime empate 
+	}
+	printf("\ndesea volver a jugar? \n1=si 2=no: ");//Imprime volver a jugar 
+	scanf("%d", & jug);//Guarda la variable
+	
+	if(jug==1){ //Si "jug" es igual a 1 entra en el if
+		system("cls");//Limpia la pantalla
+	}
+}while (jug==1);//Si "jug" es igual a 1 reinicia el ciclo
+ printf("FIN");//Imprime FIN.
+}
+
+
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <windows.h>
+
+#define N_MAX 20  // Definir el tamaño máximo del tablero
+
+using namespace std;
+
+// Declaración de variables globales
+char tablero[N_MAX][N_MAX];
+int filas = 0, columnas = 0;
+int x_pirata, y_pirata, x_tesoro, y_tesoro;
+int movimiento = 0;  // Contador de movimientos
+
+// Declaración de funciones
+void inicializarTablero();
+void dibujarTablero();
+void BuscarTesoro();
+int generarNumeroAleatorio(int min, int max);
+void setColor(int textColor, int bgColor);
+
+int main() {
+    srand(time(NULL));  // Inicializar el generador de números aleatorios
+    
+    int opcion;
+    char jugar_nuevamente;
+    
+    // Bucle principal del menú
+    do {
+        cout << "\n--- Menú ---\n";
+        cout << "1. Inicializar Tablero\n";
+        cout << "2. Dibujar Tablero\n";
+        cout << "3. Buscar Tesoro\n";
+        cout << "4. Salir\n";
+        cout << "Ingrese una opcion: ";
+        cin >> opcion;
+        
+        // Selección de la opción del menú
+        switch (opcion) {
+            case 1:
+                // Inicializar el tablero
+                cout << "Teniendo en cuenta que el agua te va a sacar 2 filas y 2 columnas\n";
+                cout << "Ingrese las dimensiones del tablero (maximo " << N_MAX << "): ";
+                cin >> filas;
+                columnas = filas;
+                inicializarTablero();
+                cout << "Tablero inicializado.\n";
+                break;
+            case 2:
+                // Dibujar el tablero
+                dibujarTablero();
+                break;
+            case 3:
+                // Iniciar la búsqueda del tesoro
+                BuscarTesoro();
+                if (tablero[x_pirata][y_pirata] == 'T') {
+                    // Si el pirata encuentra el tesoro
+                    cout << "¡Encontraste el Gran Tesoro!\n";
+                }
+                break;
+            case 4:
+                // Salir del programa
+                cout << "Saliendo del programa.\n";
+                break;
+            default:
+                // Opción inválida
+                cout << "Opción inválida. Intente nuevamente.\n";
+                break;
+        }
+        
+        // Verificar si el juego ha terminado
+        if (opcion == 3 && (tablero[x_pirata][y_pirata] == 'T' || movimiento >= 50 || tablero[x_pirata][y_pirata] == '~')) {
+            // Preguntar al usuario si desea jugar nuevamente
+            if (tablero[x_pirata][y_pirata] == 'T') {
+                cout << "¡Has encontrado el tesoro!\n";
+            } else if (tablero[x_pirata][y_pirata] == '~') {
+                cout << "¡El pirata ha caído al agua y ha muerto!\n";
+            } else if (movimiento >= 50) {
+                cout << "Has alcanzado el límite de movimientos. No has encontrado el tesoro.\n";
+            }
+
+            cout << "¿Desea jugar nuevamente? (s/n): ";
+            cin >> jugar_nuevamente;
+            if (jugar_nuevamente == 's' || jugar_nuevamente == 'S') {
+                inicializarTablero(); // Reiniciar el juego
+                system("cls"); // Limpiar la pantalla
+                opcion = 0; // Reiniciar el menú
+            } else {
+                opcion = 4; // Salir del programa
+            }
+        }
+        
+    } while (opcion != 4);
+    
+    return 0;
+}
+
+// Función para inicializar el tablero
+void inicializarTablero() {
+    if (filas <= 4 || filas > N_MAX || columnas <= 4 || columnas > N_MAX) {
+        // Validar dimensiones del tablero
+        cout << "Dimensiones inválidas. Deben ser mayores que 4 y menores o iguales a " << N_MAX << ".\n";
+        return;
+    }
+    
+    // Reiniciar el contador de movimientos
+    movimiento = 0;
+
+    // Llenar el tablero con agua
+    for (int i = 0; i < filas; i++) {
+        for (int j = 0; j < columnas; j++) {
+            if (i == 0 || j == 0 || i == filas - 1 || j == columnas - 1) {
+                tablero[i][j] = '~';  // Agua en los bordes
+            } else {
+                tablero[i][j] = ' ';  // Espacio vacío en el interior
+            }
+        }
+    }
+    
+    // Colocar puentes en las esquinas
+    tablero[0][columnas - 1] = ' ';
+    tablero[filas - 1][0] = ' ';
+    
+    // Colocar al pirata y al tesoro en posiciones aleatorias
+    x_pirata = generarNumeroAleatorio(1, filas - 2);
+    y_pirata = generarNumeroAleatorio(1, columnas - 2);
+    tablero[x_pirata][y_pirata] = 'P';
+    
+    do {
+        x_tesoro = generarNumeroAleatorio(1, filas - 2);
+        y_tesoro = generarNumeroAleatorio(1, columnas - 2);
+    } while (x_tesoro == x_pirata && y_tesoro == y_pirata);
+}
+
+// Función para dibujar el tablero
+void dibujarTablero() {
+    cout << "\nGuia del juego:\nEl agua es ~ y el puente es O\n";
+    cout << "Movimientos: " << movimiento << "\n";  // Mostrar contador de movimientos
+    if (filas <= 0 || filas > N_MAX || columnas <= 0 || columnas > N_MAX) {
+        cout << "El tablero no ha sido inicializado correctamente.\n";
+        return;
+    }
+
+    // Dibujar el tablero
+    for (int i = 0; i < filas; i++) {
+        for (int j = 0; j < columnas; j++) {
+            if (i == x_tesoro && j == y_tesoro) {
+                setColor(14, 14); // Fondo color arena, texto color arena (tesoro invisible)
+                cout << " ";
+            } else {
+                // Configurar colores y mostrar caracteres
+                switch (tablero[i][j]) {
+                    case '~':
+                        setColor(11, 1); // Texto celeste, fondo azul
+                        cout << "~";
+                        break;
+                    case 'P':
+                        setColor(14, 0); // Texto amarillo, fondo negro
+                        cout << "P";
+                        break;
+                    case ' ':
+                        if ((i == 0 && j == columnas - 1) || (i == filas - 1 && j == 0)) {
+                            setColor(0, 6); // Fondo marrón oscuro para los puentes
+                            cout << " ";
+                        } else {
+                            setColor(7, 14); // Texto blanco, fondo color arena
+                            cout << " ";
+                        }
+                        break;
+                    case 'X':
+                        setColor(15, 14); // Texto blanco, fondo color arena
+                        cout << " ";
+                        break;
+                    default:
+                        setColor(7, 14); // Texto blanco (default), fondo color arena
+                        cout << tablero[i][j];
+                        break;
+                }
+            }
+            setColor(7, 0); // Restablecer a blanco después de cada carácter
+        }
+        cout << "\n";
+    }
+}
+
+// Función para buscar el tesoro
+void BuscarTesoro() {
+    char direccion;
+    
+    if (filas <= 0 || filas > N_MAX || columnas <= 0 || columnas > N_MAX) {
+        cout << "El tablero no ha sido inicializado correctamente.\n";
+        return;
+    }
+    
+    // Bucle para la búsqueda del tesoro
+    do {
+        cout << "Ingrese la dirección (w, a, s, d): ";
+        cin >> direccion;
+        
+        int dx = 0, dy = 0;
+        
+        // Determinar la dirección del movimiento
+        switch (direccion) {
+            case 'a':
+                dy = -1;
+                break;
+            case 'd':
+                dy = 1;
+                break;
+            case 's':
+                dx = 1;
+                break;
+            case 'w':
+                dx = -1;
+                break;
+            default:
+                cout << "Dirección inválida. Intente nuevamente.\n";
+                continue;
+        }
+        
+        // Verificar si el movimiento es válido
+        int nueva_x = x_pirata + dx;
+        int nueva_y = y_pirata + dy;
+        if (nueva_x >= 0 && nueva_x < filas && nueva_y >= 0 && nueva_y < columnas) {
+            // Limpiar la posición anterior del pirata
+            tablero[x_pirata][y_pirata] = 'X';
+            // Mover el pirata a la nueva posición
+            x_pirata = nueva_x;
+            y_pirata = nueva_y;
+            // Verificar si el pirata cae en el agua
+            if (tablero[x_pirata][y_pirata] == '~') {
+                dibujarTablero();
+                cout << "¡El pirata ha caído al agua y ha muerto!\n";
+                cout << "¿Desea jugar nuevamente? (s/n): ";
+                char jugar_nuevamente;
+                cin >> jugar_nuevamente;
+                if (jugar_nuevamente == 's' || jugar_nuevamente == 'S') {
+                    inicializarTablero(); // Reiniciar el juego
+                    system("cls"); // Limpiar la pantalla
+                    break;
+                } else {
+                    exit(0); // Terminar el programa
+                }
+            }
+            tablero[x_pirata][y_pirata] = 'P';
+        } else {
+            cout << "Movimiento inválido. Intente nuevamente.\n";
+            continue;
+        }
+        
+        dibujarTablero();
+        
+        movimiento++;  // Incrementar el contador de movimientos
+        
+        // Verificar si el pirata encuentra el tesoro
+        if (tablero[x_pirata][y_pirata] == 'P' && x_pirata == x_tesoro && y_pirata == y_tesoro) {
+            cout << "¡Has encontrado el tesoro!\n";
+            cout << "¿Desea jugar nuevamente? (s/n): ";
+            char jugar_nuevamente;
+            cin >> jugar_nuevamente;
+            if (jugar_nuevamente == 's' || jugar_nuevamente == 'S') {
+                inicializarTablero(); // Reiniciar el juego
+                system("cls"); // Limpiar la pantalla
+                break;
+            } else {
+                exit(0); // Terminar el programa
+            }
+        }
+        
+        // Verificar si se alcanza el límite de movimientos
+        if (movimiento >= 50) {
+            cout << "Has alcanzado el límite de movimientos. No has encontrado el tesoro.\n";
+            cout << "¿Desea jugar nuevamente? (s/n): ";
+            char jugar_nuevamente;
+            cin >> jugar_nuevamente;
+            if (jugar_nuevamente == 's' || jugar_nuevamente == 'S') {
+                inicializarTablero(); // Reiniciar el juego
+                system("cls"); // Limpiar la pantalla
+                break;
+            } else {
+                exit(0); // Terminar el programa
+            }
+        }
+        
+    } while (true);
+}
+
+// Función para generar un número aleatorio entre un mínimo y un máximo
+int generarNumeroAleatorio(int min, int max) {
+    return min + rand() % (max - min + 1);
+}
+
+// Función para cambiar el color del texto y del fondo en la consola
+void setColor(int textColor, int bgColor) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, (bgColor << 4) | textColor);
+}
+
+
+
+
+
+
+
+
+
+1. **Interfaz de usuario intuitiva:** Hemos diseñado un menú claro y sencillo que permite al usuario interactuar con el juego de manera intuitiva. El usuario puede elegir entre inicializar el tablero, dibujar el tablero, buscar el tesoro o salir del juego.
+
+2. **Inicialización del tablero:* * Cuando el usuario elige inicializar el tablero, el programa crea un nuevo tablero con las dimensiones especificadas por el usuario. Llenamos los bordes del tablero con agua (`~`) para crear un desafío emocionante para el jugador. Además, colocamos puentes (` `) estratégicamente en las esquinas del tablero para agregar un aspecto visual interesante.
+	
+3. **Dibujo del tablero:** La función `dibujarTablero()` se encarga de mostrar el estado actual del juego en la consola. Utilizamos colores para resaltar diferentes elementos del tablero, como el agua, el pirata y el tesoro. Esto mejora la experiencia visual del usuario y hace que el juego sea más atractivo.
+
+4. **Búsqueda del tesoro:** En la función `BuscarTesoro()`, el jugador puede mover al pirata por el tablero en busca del tesoro. El programa verifica si el movimiento del pirata es válido y actualiza la posición del pirata en el tablero. Si el pirata cae en el agua (`~`), el juego termina y el jugador pierde. Si el pirata encuentra el tesoro (`T`), ¡el jugador gana!
+
+5. **Aleatoriedad y rejugabilidad:** Utilizamos funciones para generar números aleatorios y colocar el pirata y el tesoro en posiciones aleatorias en el tablero. Esto garantiza que cada partida sea única y que el juego sea emocionante y rejugable.
+
+
+—---------------------------------------------------------------------------------------------------------
+pozos juego
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <windows.h>
+
+const int N = 10;
+const int NUM_POZOS = 20; // Número de pozos que se agregarán a la matriz
+const int MAX_VIDAS = 3;
+
+void establecerColor(int fondo, int texto) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, (fondo << 4) | texto);
+}
+
+void establecerCursor(int x, int y) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD cursorPos = { (SHORT)x, (SHORT)y };
+    SetConsoleCursorPosition(hConsole, cursorPos);
+}
+
+void generarMatrizConPozos(std::vector<std::vector<int> >& matriz) {
+    int pozos_colocados = 0;
+    while (pozos_colocados < NUM_POZOS) {
+        int fila = rand() % N;
+        int columna = rand() % N;
+        if ((fila == 0 && columna == 0) || (fila == 0 && columna == 1) || 
+            (fila == 1 && columna == 0) || (fila == 8 && columna == 9) || 
+            (fila == 9 && columna == 8) || (fila == N-1 && columna == N-1)) {
+            continue; // Evitar pozos en las posiciones críticas
+        }
+        if (matriz[fila][columna] == 1) {
+            matriz[fila][columna] = 0;
+            pozos_colocados++;
+        }
+    }
+}
+
+void imprimirMatriz(const std::vector<std::vector<int> >& matriz, int fila_jugador, int columna_jugador, const std::string& mensaje) {
+    establecerCursor(0, 2); // Mover el cursor debajo del mensaje de bienvenida
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            if (i == fila_jugador && j == columna_jugador) {
+                establecerColor(14, 0); // Fondo amarillo para el jugador, texto negro
+                std::cout << "P ";
+            } else if (i == N-1 && j == N-1) {
+                establecerColor(4, 7); // Fondo rojo para la posición final, texto blanco
+                std::cout << "  "; // Espacio vacío para representar la posición final
+            } else if (matriz[i][j] == 0) {
+                establecerColor(8, 7); // Fondo gris oscuro para los pozos, texto blanco
+                std::cout << "  "; // Espacio vacío para representar el pozo
+            } else {
+                establecerColor(6, 7); // Fondo marrón claro para el piso, texto blanco
+                std::cout << "  "; // Espacio vacío para representar el piso
+            }
+        }
+        std::cout << std::endl;
+    }
+    establecerCursor(0, N + 4); // Mover el cursor debajo de la matriz
+    std::cout << mensaje << std::endl; // Imprimir el mensaje
+    establecerColor(0, 7); // Resetear el color al color original
+}
+
+bool moverse(int& fila, int& columna, char direccion, int& vidas, std::string& mensaje) {
+    switch (direccion) {
+        case 'w': // Moverse hacia arriba
+            if (fila > 0) fila--;
+            break;
+        case 's': // Moverse hacia abajo
+            if (fila < N-1) fila++;
+            break;
+        case 'a': // Moverse hacia la izquierda
+            if (columna > 0) columna--;
+            break;
+        case 'd': // Moverse hacia la derecha
+            if (columna < N-1) columna++;
+            break;
+        default:
+            mensaje = "Movimiento inválido!";
+            return false;
+    }
+    return true;
+}
+
+bool jugarDeNuevo() {
+    char respuesta;
+    std::cout << "¿Quieres jugar de nuevo? (s/n): ";
+    std::cin >> respuesta;
+    return (respuesta == 's' || respuesta == 'S');
+}
+
+void limpiarPantalla() {
+    // Limpiar pantalla y mover el cursor al inicio
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD coordScreen = { 0, 0 };
+    DWORD cCharsWritten;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    DWORD dwConSize;
+
+    // Obtener el tamaño de la consola
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+        return;
+    }
+    dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
+
+    // Llenar la consola con espacios en blanco
+    if (!FillConsoleOutputCharacter(hConsole, (TCHAR)' ', dwConSize, coordScreen, &cCharsWritten)) {
+        return;
+    }
+
+    // Establecer los atributos de texto
+    if (!FillConsoleOutputAttribute(hConsole, csbi.wAttributes, dwConSize, coordScreen, &cCharsWritten)) {
+        return;
+    }
+
+    // Mover el cursor al inicio
+    SetConsoleCursorPosition(hConsole, coordScreen);
+}
+
+int main() {
+    srand(time(0));
+
+    bool continuar_jugando = true;
+    while (continuar_jugando) {
+        std::vector<std::vector<int> > matriz(N, std::vector<int>(N, 1));
+        generarMatrizConPozos(matriz);
+
+        int fila = 0, columna = 0;
+        int vidas = MAX_VIDAS;
+        std::string mensaje = "";
+
+        // Imprimir el mensaje de bienvenida
+        establecerCursor(0, 0);
+        std::cout << "Bienvenido al juego. Debes llegar a la posicion (9,9) sin perder tus 3 vidas." << std::endl;
+
+        while (fila != N-1 || columna != N-1) {
+            limpiarPantalla(); // Limpiar la pantalla
+            // Reimprimir el mensaje de bienvenida
+            establecerCursor(0, 0);
+            std::cout << "Bienvenido al juego. Debes llegar a la posicion (9,9) sin perder tus 3 vidas." << std::endl;
+            
+            // Imprimir vidas restantes y la matriz
+            establecerCursor(0, 1);
+            std::cout << "Vidas restantes: " << vidas << std::endl;
+            imprimirMatriz(matriz, fila, columna, mensaje);
+
+            std::cout << "Ingresa direccion (w: arriba, s: abajo, a: izquierda, d: derecha): ";
+            char direccion;
+            std::cin >> direccion;
+
+            int fila_previa = fila;
+            int columna_previa = columna;
+
+            if (moverse(fila, columna, direccion, vidas, mensaje)) {
+                if (matriz[fila][columna] == 0) {
+                    vidas--;
+                    mensaje = "Caiste en un pozo! Perdiste una vida.";
+                    fila = fila_previa;
+                    columna = columna_previa;
+                    if (vidas == 0) {
+                        mensaje = "Has perdido todas tus vidas. Juego terminado.";
+                        break;
+                    }
+                } else {
+                    mensaje = "Movimiento exitoso.";
+                }
+            } else {
+                mensaje = "Movimiento inválido!";
+                fila = fila_previa;
+                columna = columna_previa;
+            }
+        }
+
+        if (vidas > 0 && fila == N-1 && columna == N-1) {
+            limpiarPantalla(); // Limpiar la pantalla
+            establecerCursor(0, 0);
+            std::cout << "Felicitaciones! Has llegado a la posicion (9,9) con " << vidas << " vidas restantes." << std::endl;
+            imprimirMatriz(matriz, fila, columna, mensaje);
+        }
+
+        continuar_jugando = jugarDeNuevo();
+    }
+
+    return 0;
+}
+—-------------------------------------------------------------------------------------------------------------------
+ta te ti
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <ctype.h>
+
+#define SIZE 3
+
+void inicializarTablero(char tablero[SIZE][SIZE]);
+void imprimirTablero(char tablero[SIZE][SIZE]);
+int hayGanador(char tablero[SIZE][SIZE]);
+int esEmpate(char tablero[SIZE][SIZE]);
+int validarMovimiento(char tablero[SIZE][SIZE], int fila, int columna);
+void realizarMovimiento(char tablero[SIZE][SIZE], int fila, int columna, char simbolo);
+void movimientoComputadora(char tablero[SIZE][SIZE], char computadoraSimbolo, char jugadorSimbolo);
+int obtenerEnteroValido(const char* mensaje);
+
+int main() {
+    char tablero[SIZE][SIZE];
+    int fila, columna;
+    char jugadorSimbolo, computadoraSimbolo;
+    char jugarDeNuevo;
+    
+    srand(time(NULL));
+    
+    do {
+        inicializarTablero(tablero);
+        
+        do {
+            printf("Elija su simbolo (X/O): ");
+            scanf(" %c", &jugadorSimbolo);
+            jugadorSimbolo = toupper(jugadorSimbolo);
+            if (jugadorSimbolo != 'X' && jugadorSimbolo != 'O') {
+                printf("El simbolo que estas ingresando es incorrecto. Por favor, elige 'X' o 'O'.\n");
+            }
+        } while (jugadorSimbolo != 'X' && jugadorSimbolo != 'O');
+        
+        computadoraSimbolo = (jugadorSimbolo == 'X') ? 'O' : 'X';
+        
+        while (1) {
+            imprimirTablero(tablero);
+            printf("Turno del jugador %c\n", jugadorSimbolo);
+            
+            do {
+                fila = obtenerEnteroValido("Ingrese la fila (1-3): ");
+                columna = obtenerEnteroValido("Ingrese la columna (1-3): ");
+                fila--;  // Ajustar índice para que sea 0-based
+                columna--;  // Ajustar índice para que sea 0-based
+            } while (!validarMovimiento(tablero, fila, columna));
+            
+            realizarMovimiento(tablero, fila, columna, jugadorSimbolo);
+            
+            if (hayGanador(tablero)) {
+                imprimirTablero(tablero);
+                printf("Jugador %c gana!\n", jugadorSimbolo);
+                break;
+            } else if (esEmpate(tablero)) {
+                imprimirTablero(tablero);
+                printf("Es un empate!\n");
+                break;
+            }
+            
+            movimientoComputadora(tablero, computadoraSimbolo, jugadorSimbolo);
+            
+            if (hayGanador(tablero)) {
+                imprimirTablero(tablero);
+                printf("Computadora %c gana!\n", computadoraSimbolo);
+                break;
+            } else if (esEmpate(tablero)) {
+                imprimirTablero(tablero);
+                printf("Es un empate!\n");
+                break;
+            }
+        }
+        
+        printf("¿Quieres jugar de nuevo? (S/N): ");
+        scanf(" %c", &jugarDeNuevo);
+        jugarDeNuevo = toupper(jugarDeNuevo);
+        
+        if(jugarDeNuevo == 'S'){
+            system("cls"); // Limpia la pantalla
+        }
+    } while (jugarDeNuevo == 'S');
+    
+    return 0;
+}
+
+void inicializarTablero(char tablero[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            tablero[i][j] = ' ';
+        }
+    }
+}
+
+void imprimirTablero(char tablero[SIZE][SIZE]) {
+    printf("  ");
+    for (int i = 1; i <= SIZE; i++) {
+        printf(" %d ", i);
+    }
+    printf("\n");
+    for (int i = 0; i < SIZE; i++) {
+        printf("%d ", i + 1);
+        for (int j = 0; j < SIZE; j++) {
+            printf(" %c ", tablero[i][j]);
+            if (j < SIZE - 1) {
+                printf("|");
+            }
+        }
+        printf("\n");
+        if (i < SIZE - 1) {
+            printf("  ");
+            for (int k = 0; k < SIZE; k++) {
+                printf("---");
+                if (k < SIZE - 1) {
+                    printf("+");
+                }
+            }
+            printf("\n");
+        }
+    }
+}
+
+int hayGanador(char tablero[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        if (tablero[i][0] == tablero[i][1] && tablero[i][1] == tablero[i][2] && tablero[i][0] != ' ') {
+            return 1;
+        }
+        if (tablero[0][i] == tablero[1][i] && tablero[1][i] == tablero[2][i] && tablero[0][i] != ' ') {
+            return 1;
+        }
+    }
+    if (tablero[0][0] == tablero[1][1] && tablero[1][1] == tablero[2][2] && tablero[0][0] != ' ') {
+        return 1;
+    }
+    if (tablero[0][2] == tablero[1][1] && tablero[1][1] == tablero[2][0] && tablero[0][2] != ' ') {
+        return 1;
+    }
+    return 0;
+}
+
+int esEmpate(char tablero[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (tablero[i][j] == ' ') {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+int validarMovimiento(char tablero[SIZE][SIZE], int fila, int columna) {
+    if (fila < 0 || fila >= SIZE || columna < 0 || columna >= SIZE) {
+        printf("Movimiento invalido. Fuera de limites.\n");
+        return 0;
+    }
+    if (tablero[fila][columna] != ' ') {
+        printf("Movimiento invalido. La posición ya esta ocupada.\n");
+        return 0;
+    }
+    return 1;
+}
+
+void realizarMovimiento(char tablero[SIZE][SIZE], int fila, int columna, char simbolo) {
+    tablero[fila][columna] = simbolo;
+}
+
+int puedeGanar(char tablero[SIZE][SIZE], char simbolo, int *fila, int *columna) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (tablero[i][j] == ' ') {
+                tablero[i][j] = simbolo;
+                if (hayGanador(tablero)) {
+                    tablero[i][j] = ' ';
+                    *fila = i;
+                    *columna = j;
+                    return 1;
+                }
+                tablero[i][j] = ' ';
+            }
+        }
+    }
+    return 0;
+}
+
+void movimientoComputadora(char tablero[SIZE][SIZE], char computadoraSimbolo, char jugadorSimbolo) {
+    int fila, columna;
+    
+    // Estrategia mixta para nivel medio de dificultad
+    int randomChoice = rand() % 4;
+
+    if (randomChoice == 0) {
+        // 25% de probabilidad de hacer un movimiento aleatorio
+        do {
+            fila = rand() % SIZE;
+            columna = rand() % SIZE;
+        } while (tablero[fila][columna] != ' ');
+        realizarMovimiento(tablero, fila, columna, computadoraSimbolo);
+        printf("La computadora pone su %c en la fila %d, columna %d\n", computadoraSimbolo, fila + 1, columna + 1);
+    } else {
+        // 75% de probabilidad de seguir una estrategia más inteligente
+        if (puedeGanar(tablero, computadoraSimbolo, &fila, &columna)) {
+            realizarMovimiento(tablero, fila, columna, computadoraSimbolo);
+            return;
+        }
+        
+        if (puedeGanar(tablero, jugadorSimbolo, &fila, &columna)) {
+            realizarMovimiento(tablero, fila, columna, computadoraSimbolo);
+            return;
+        }
+        
+        if (tablero[1][1] == ' ') {
+            realizarMovimiento(tablero, 1, 1, computadoraSimbolo);
+            return;
+        }
+        
+        int esquinas[4][2] = {{0, 0}, {0, 2}, {2, 0}, {2, 2}};
+        for (int i = 0; i < 4; i++) {
+            if (tablero[esquinas[i][0]][esquinas[i][1]] == ' ') {
+                realizarMovimiento(tablero, esquinas[i][0], esquinas[i][1], computadoraSimbolo);
+                return;
+            }
+        }
+        
+        do {
+            fila = rand() % SIZE;
+            columna = rand() % SIZE;
+        } while (tablero[fila][columna] != ' ');
+        realizarMovimiento(tablero, fila, columna, computadoraSimbolo);
+        printf("La computadora pone su %c en la fila %d, columna %d\n", computadoraSimbolo, fila + 1, columna + 1);
+    }
+}
+
+int obtenerEnteroValido(const char* mensaje) {
+    char entrada[10];
+    int numero;
+    while (1) {
+        printf("%s", mensaje);
+        scanf("%s", entrada);
+        if (sscanf(entrada, "%d", &numero) != 1 || numero < 1 || numero > 3) {
+            printf("Opcion invalida. Por favor, ingrese un numero entero entre 1 y 3.\n");
+        } else {
+            return numero;
+        }
+    }
+}
+
+
+
+
+9 7 6  | 3 1 5  | 4 2 8
+4 1 5  | 6 2 8  | 3 7 9
+8 3 2  | 4 7 9  | 5 1 6
+---------------------------
+2 4 3  | 1 6 7  | 8 9 5
+5 6 7  | 9 8 4  | 2 3 1
+1 8 9  | 2 5 3  | 7 6 4
+---------------------------
+6 5 8  | 7 3 1  | 9 4 2
+7 9 1  | 5 4 2  | 6 8 3
+3 2 4  | 8 9 6  | 1 5 7
+
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
+using namespace std;
+
+#define UNASSIGNED 0
+#define N 9
+
+bool isSafe(int grid[N][N], int row, int col, int num) {
+    for (int x = 0; x < N; x++)
+        if (grid[row][x] == num || grid[x][col] == num)
+            return false;
+
+    int startRow = row - row % 3, startCol = col - col % 3;
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            if (grid[i + startRow][j + startCol] == num)
+                return false;
+
+    return true;
+}
+
+bool solveSudoku(int grid[N][N], int row, int col) {
+    if (row == N - 1 && col == N)
+        return true;
+    if (col == N) {
+        row++;
+        col = 0;
+    }
+    if (grid[row][col] != UNASSIGNED)
+        return solveSudoku(grid, row, col + 1);
+
+    for (int num = 1; num <= 9; num++) {
+        if (isSafe(grid, row, col, num)) {
+            grid[row][col] = num;
+            if (solveSudoku(grid, row, col + 1))
+                return true;
+        }
+        grid[row][col] = UNASSIGNED;
+    }
+    return false;
+}
+
+void printGrid(int grid[N][N]) {
+    for (int row = 0; row < N; row++) {
+        for (int col = 0; col < N; col++) {
+            if (col == 3 || col == 6)
+                cout << " | ";
+            cout << (grid[row][col] == UNASSIGNED ? "_" : to_string(grid[row][col])) << " ";
+        }
+        if (row == 2 || row == 5) {
+            cout << endl;
+            for (int i = 0; i < N; i++)
+                cout << "---";
+        }
+        cout << endl;
+    }
+}
+
+void fillDiagonal(int grid[N][N]) {
+    for (int i = 0; i < N; i += 3) {
+        bool nums[N + 1] = { false };
+        for (int j = 0; j < 3; j++) {
+            for (int k = 0; k < 3; k++) {
+                int num;
+                do {
+                    num = rand() % 9 + 1;
+                } while (nums[num]);
+                nums[num] = true;
+                grid[i + j][i + k] = num;
+            }
+        }
+    }
+}
+
+void removeElements(int grid[N][N], int count) {
+    while (count) {
+        int cellId = rand() % (N * N);
+        int row = cellId / N;
+        int col = cellId % N;
+        if (grid[row][col] != UNASSIGNED) {
+            grid[row][col] = UNASSIGNED;
+            count--;
+        }
+    }
+}
+
+bool isComplete(int grid[N][N]) {
+    for (int row = 0; row < N; row++) {
+        for (int col = 0; col < N; col++) {
+            if (grid[row][col] == UNASSIGNED) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+void clearScreen() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
+void customSleep(int seconds) {
+#ifdef _WIN32
+    Sleep(seconds * 1000); // Sleep takes milliseconds
+#else
+    sleep(seconds); // sleep takes seconds
+#endif
+}
+
+int main() {
+    srand(time(0));
+    int grid[N][N] = { { 0 } };
+
+    fillDiagonal(grid);
+    solveSudoku(grid, 0, 0);
+    removeElements(grid, 40);
+
+    while (!isComplete(grid)) {
+        clearScreen();
+        printGrid(grid);
+        int row, col, num;
+        cout << "Ingrese la fila (1-9), columna (1-9) y el numero (1-9) a colocar: ";
+        cin >> row >> col >> num;
+        row--; col--; // Ajustar a índice de matriz 0-based
+        if (row >= 0 && row < N && col >= 0 && col < N && num >= 1 && num <= 9) {
+            if (grid[row][col] == UNASSIGNED && isSafe(grid, row, col, num)) {
+                grid[row][col] = num;
+            } else {
+                cout << "Movimiento no válido. Intente de nuevo." << endl;
+                customSleep(2); // Pausa para mostrar el mensaje
+            }
+        } else {
+            cout << "Entrada no válida. Intente de nuevo." << endl;
+            customSleep(2); // Pausa para mostrar el mensaje
+        }
+    }
+
+    clearScreen();
+    cout << "¡Felicidades! Ha completado el Sudoku." << endl;
+    printGrid(grid);
+
+    return 0;
+}
+
